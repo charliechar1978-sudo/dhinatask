@@ -322,8 +322,10 @@ document.addEventListener('DOMContentLoaded', function () {
         form.elements.TaskStatus.value = task.TaskStatus || '';
         form.elements.Notes.value = task.Notes || '';
         const ownerSelect = form.elements.TaskOwner;
-        ownerSelect.innerHTML = '<option value="">Select Owner</option>' + allTeamMembers.map(m => `<option value="${m.FullName}" ${task.TaskOwner === m.FullName ? 'selected' : ''}>${m.FullName}</option>`).join('');
-        modal.style.display = 'flex';
+ownerSelect.innerHTML = '<option value="">Select Owner</option>' + 
+    allTeamMembers.map(m => `<option value="${m.FullName}">${m.FullName}</option>`).join('');
+ownerSelect.value = task.TaskOwner || '';
+
     }
 
     async function handleEditFormSubmit(e) {
@@ -566,4 +568,5 @@ document.addEventListener('DOMContentLoaded', function () {
             setButtonLoading(suggestSubtasksBtn, false);
         }
     });
+
 });
