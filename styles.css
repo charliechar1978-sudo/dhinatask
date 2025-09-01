@@ -1,0 +1,99 @@
+/* Custom Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6; /* Light Gray Background */
+}
+
+/* Custom scrollbar for better aesthetics */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Styles for Kanban drag-and-drop */
+.kanban-column {
+    min-height: 200px; /* Ensures drop zone is available even when empty */
+}
+.task-card.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+/* Sidebar transition */
+#sidebar {
+    transition: width 0.3s ease-in-out;
+}
+
+/* Modal backdrop styling */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Light/Dark Mode Variables */
+:root {
+    --bg-color: #f3f4f6;
+    --text-color: #1f2937;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --sidebar-bg: #ffffff;
+    --sidebar-text: #4b5563;
+    --sidebar-active-bg: #e0f2fe;
+    --sidebar-active-text: #0284c7;
+    --header-bg: #ffffff;
+}
+
+.dark-mode {
+    --bg-color: #111827;
+    --text-color: #d1d5db;
+    --card-bg: #1f2937;
+    --border-color: #374151;
+    --sidebar-bg: #1f2937;
+    --sidebar-text: #9ca3af;
+    --sidebar-active-bg: #374151;
+    --sidebar-active-text: #e5e7eb;
+    --header-bg: #1f2937;
+}
+
+/* Applying variables to elements */
+body, .main-content {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+.card, .modal-content {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+#sidebar, #header {
+     background-color: var(--sidebar-bg);
+}
+#header {
+    border-bottom-color: var(--border-color);
+}
+#sidebar a {
+    color: var(--sidebar-text);
+}
+#sidebar a.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-text);
+}
+.prose { color: var(--text-color); }
+input, select, textarea {
+    background-color: var(--bg-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+.view-switcher-btn.active {
+    background-color: var(--card-bg) !important;
+    color: var(--sidebar-active-text) !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
