@@ -188,11 +188,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 const taskToUpdate = allTasks.find(t => t.TaskNo === taskNo);
                 if (taskToUpdate && taskToUpdate.TaskStatus !== newStatus) {
-                    taskToUpdate.TaskStatus = newStatus;
-                    await updateSheetData('UPDATE', 'Tasks', taskToUpdate);
-                    showToast(`Task "${taskNo}" moved to ${newStatus}`, 'info');
-                    // No full reload needed, just update local state and dashboard
-                    renderDashboard();
+                  taskToUpdate.TaskStatus = newStatus;
+await updateSheetData('UPDATE', 'Tasks', taskToUpdate);
+renderKanban(allTasks);   // refresh Kanban
+renderTable(allTasks);    // refresh Table
+renderDashboard();        // refresh Dashboard
+
                 }
             });
         });
@@ -332,10 +333,12 @@ ownerSelect.value = task.TaskOwner || '';
         e.preventDefault();
         const form = e.target;
         const formData = Object.fromEntries(new FormData(form).entries());
-        await updateSheetData('UPDATE', 'Tasks', formData);
-        form.closest('.fixed').style.display = 'none';
-        showToast('Task updated successfully! Refreshing...', 'success');
-        setTimeout(loadAllData, 500); // Give sheet a moment to update
+        const idx = allTasks.findIndex(t => t.TaskNo === formData.OriginalTaskNo);
+if (idx !== -1) allTasks[idx] = formData;  // update local state
+renderKanban(allTasks);
+renderTable(allTasks);
+renderDashboard();
+
     }
     
     function confirmDeleteTask(taskNo) {
@@ -570,3 +573,4 @@ ownerSelect.value = task.TaskOwner || '';
     });
 
 });
+
