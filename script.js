@@ -332,6 +332,8 @@ renderDashboard();        // refresh Dashboard
 ownerSelect.innerHTML = '<option value="">Select Owner</option>' + 
     allTeamMembers.map(m => `<option value="${m.FullName}">${m.FullName}</option>`).join('');
 ownerSelect.value = task.TaskOwner || '';
+        // 🔹 Show the modal
+    modal.style.display = 'flex';
 
     }
 
@@ -586,6 +588,7 @@ ownerSelect.value = task.TaskOwner || '';
     });
 
 });
+
 
 
 
