@@ -312,7 +312,7 @@ renderDashboard();        // refresh Dashboard
         if (!task) return;
         const modal = document.getElementById('edit-task-modal');
         const form = document.getElementById('edit-task-form');
-        form.elements.OriginalTaskNo.value = task.TaskNo;
+        form.elements.TaskNo.value = task.TaskNo;
         form.elements.TaskNo.value = task.TaskNo;
         form.elements.Project.value = task.Project || '';
         form.elements.TaskName.value = task.TaskName || '';
@@ -573,4 +573,5 @@ renderDashboard();
     });
 
 });
+
 
