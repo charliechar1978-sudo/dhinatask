@@ -333,9 +333,9 @@ ownerSelect.innerHTML = '<option value="">Select Owner</option>' +
     allTeamMembers.map(m => `<option value="${m.FullName}">${m.FullName}</option>`).join('');
 ownerSelect.value = task.TaskOwner || '';
         // 🔹 Show the modal
+   modal.classList.remove('hidden');
     modal.style.display = 'flex';
-
-    }
+}
 
     async function handleEditFormSubmit(e) {
     e.preventDefault();
@@ -588,6 +588,7 @@ ownerSelect.value = task.TaskOwner || '';
     });
 
 });
+
 
 
 
