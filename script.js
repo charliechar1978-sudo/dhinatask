@@ -20,21 +20,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function updateSheetData(action, sheetName, data) {
-        try {
-            const response = await fetch(GOOGLE_SHEET_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action, sheetName, data })
-            });
-            // Note: 'no-cors' mode results in an opaque response, so we can't check status.
-            // We will optimistically reload the data.
-            return { success: true };
-        } catch (error) {
-            console.error(`Error performing ${action} on ${sheetName}:`, error);
-            showToast(`Operation failed: ${action} on ${sheetName}.`, 'error');
-            return { success: false };
-        }
+    try {
+        const response = await fetch(GOOGLE_SHEET_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, sheetName, data })
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const result = await response.json();
+        if (result.error) throw new Error(result.error);
+
+        return { success: true, result };
+    } catch (error) {
+        console.error(`Error performing ${action} on ${sheetName}:`, error);
+        showToast(`Operation failed: ${action} on ${sheetName}.`, 'error');
+        return { success: false, error };
     }
+}
+
     
     // --- Gemini API Integration ---
     const API_KEY = ""; // PASTE YOUR GEMINI API KEY HERE
@@ -188,7 +193,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const taskToUpdate = allTasks.find(t => t.TaskNo === taskNo);
                 if (taskToUpdate && taskToUpdate.TaskStatus !== newStatus) {
                   taskToUpdate.TaskStatus = newStatus;
-await updateSheetData('UPDATE', 'Tasks', taskToUpdate);
+await updateSheetData("UPDATE", "Tasks", taskToUpdate);
+setTimeout(loadAllData, 500); // reload to keep Sheets + UI in sync
 renderKanban(allTasks);   // refresh Kanban
 renderTable(allTasks);    // refresh Table
 renderDashboard();        // refresh Dashboard
@@ -329,16 +335,23 @@ ownerSelect.value = task.TaskOwner || '';
     }
 
     async function handleEditFormSubmit(e) {
-        e.preventDefault();
-        const form = e.target;
-        const formData = Object.fromEntries(new FormData(form).entries());
-        const idx = allTasks.findIndex(t => t.TaskNo === formData.OriginalTaskNo);
-if (idx !== -1) allTasks[idx] = formData;  // update local state
-renderKanban(allTasks);
-renderTable(allTasks);
-renderDashboard();
+    e.preventDefault();
+    const form = e.target;
+    const formData = Object.fromEntries(new FormData(form).entries());
 
+    const result = await updateSheetData("UPDATE", "Tasks", formData);
+
+    if (result.success) {
+        const idx = allTasks.findIndex(t => t.TaskNo === formData.TaskNo);
+        if (idx !== -1) allTasks[idx] = formData;
+
+        renderKanban(allTasks);
+        renderTable(allTasks);
+        renderDashboard();
+        showToast("Task updated successfully!", "success");
     }
+}
+
     
     function confirmDeleteTask(taskNo) {
         const modal = document.getElementById('delete-confirm-modal');
@@ -538,7 +551,7 @@ renderDashboard();
             const newTasks = await generateTasksForProject(projectName);
             // Create tasks one by one
             for (const [index, task] of newTasks.entries()) {
-                 const newId = `T-${allTasks.length + 1 + index}`;
+                 const newId = `T-${Date.now()}-${index}`;
                  const owner = allTeamMembers.length > 0 ? allTeamMembers[index % allTeamMembers.length].FullName : '';
                  const taskData = { TaskNo: newId, TaskName: task.taskName, Project: projectName, Priority: task.priority, TaskStatus: 'To Do', EndDate: '', TaskOwner: owner };
                  await updateSheetData('CREATE', 'Tasks', taskData);
@@ -572,6 +585,7 @@ renderDashboard();
     });
 
 });
+
 
 
 
