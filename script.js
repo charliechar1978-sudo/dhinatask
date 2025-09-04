@@ -268,6 +268,7 @@ renderDashboard();        // refresh Dashboard
             card.className = 'task-card card bg-white p-4 rounded-lg shadow-sm border cursor-move';
             card.draggable = true;
             card.dataset.taskNo = task.TaskNo;
+            card.setAttribute("data-task-id", task.TaskNo);
             card.innerHTML = `<div class="flex items-start justify-between"><div><p class="font-semibold">${task.TaskName}</p><p class="text-sm text-gray-500">${task.Project}</p></div><div class="flex-shrink-0 flex items-center space-x-1"><button class="p-1 text-gray-400 hover:text-blue-600 edit-task-btn" data-task-no="${task.TaskNo}"><i data-feather="edit-2" class="w-4 h-4"></i></button><button class="p-1 text-gray-400 hover:text-red-600 delete-task-btn" data-task-no="${task.TaskNo}"><i data-feather="trash-2" class="w-4 h-4"></i></button></div></div><div class="flex items-center justify-between mt-2"><span class="px-2 py-1 text-xs ${priorityColors[task.Priority] || 'bg-gray-100'} rounded-full">${task.Priority}</span><img src="https://placehold.co/24x24/E2E8F0/4A5568?text=${(task.TaskOwner || ' ').charAt(0)}" class="rounded-full" title="${task.TaskOwner}"></div>`;
             columns[task.TaskStatus]?.appendChild(card);
         });
@@ -585,6 +586,7 @@ ownerSelect.value = task.TaskOwner || '';
     });
 
 });
+
 
 
 
