@@ -406,6 +406,7 @@ ownerSelect.value = task.TaskOwner || '';
         const formData = Object.fromEntries(new FormData(form).entries());
         if (action === 'CREATE' && sheetName === 'Tasks') {
             if (!formData.TaskStatus) formData.TaskStatus = 'To Do';
+             if (!formData.TaskType) formData.TaskType = '';
         }
         await updateSheetData(action, sheetName, formData);
         form.reset();
@@ -588,6 +589,7 @@ ownerSelect.value = task.TaskOwner || '';
     });
 
 });
+
 
 
 
