@@ -327,7 +327,6 @@ renderDashboard();        // refresh Dashboard
         form.elements.Priority.value = task.Priority || '';
         form.elements.TaskOwner.value = task.TaskOwner || '';
         form.elements.TaskStatus.value = task.TaskStatus || '';
-        form.elements.TaskType.value = task.TaskType || '';
         form.elements.Notes.value = task.Notes || '';
         const ownerSelect = form.elements.TaskOwner;
 ownerSelect.innerHTML = '<option value="">Select Owner</option>' + 
@@ -589,6 +588,7 @@ ownerSelect.value = task.TaskOwner || '';
     });
 
 });
+
 
 
 
