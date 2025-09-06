@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // !!! IMPORTANT !!! PASTE YOUR DEPLOYED WEB APP URL HERE
 
-    const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbz_ocr-_noHinCO3XL1V5fGhBR28PJKLWNjRfZb9RCcQrXNm86c0Fv90kTOcDz-hgMU/exec";
+    const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby1mChXj0nOkkjkEoqi8RdYVJ0CusxkI6zRMHcNBA1z34Iox5h3AKIkk1mxyq9jwJX1/exec";
 
     // --- Global State Variables ---
 
@@ -1174,4 +1174,5 @@ populateAddTaskDropdowns();
 
 
 });
+
 
