@@ -302,6 +302,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('click', (e) => { if (e.target.classList.contains('modal-backdrop')) e.target.style.display = 'none'; });
 
+// When opening the Add Task modal, populate the Project & Owner dropdowns from current data
+const addTaskBtn = document.getElementById('add-task-btn');
+if (addTaskBtn) {
+  addTaskBtn.addEventListener('click', () => {
+    populateAddTaskDropdowns();
+  });
+}
 
 
     // --- Kanban Board Logic ---
@@ -574,7 +581,28 @@ renderDashboard();        // refresh Dashboard
 
     }
 
-    
+    function populateAddTaskDropdowns() {
+  // Project list from Projects module
+  const projectSelect = document.querySelector('#add-task-form select[name="Project"]');
+  if (projectSelect) {
+    projectSelect.innerHTML =
+      '<option value="">Select Project</option>' +
+      (allProjects || [])
+        .map(p => `<option value="${p.ProjectName}">${p.ProjectName}</option>`)
+        .join('');
+  }
+
+  // Owner list from Team Members module
+  const ownerSelect = document.querySelector('#add-task-form select[name="TaskOwner"]');
+  if (ownerSelect) {
+    ownerSelect.innerHTML =
+      '<option value="">Select Owner</option>' +
+      (allTeamMembers || [])
+        .map(m => `<option value="${m.FullName}">${m.FullName}</option>`)
+        .join('');
+  }
+}
+
 
     function populateTableFilters() {
 
@@ -822,7 +850,7 @@ renderDashboard();
 
         allTeamMembers = members;
 
-
+populateAddTaskDropdowns();
 
         renderKanban(allTasks);
 
@@ -1147,4 +1175,3 @@ renderDashboard();
 
 
 });
-
