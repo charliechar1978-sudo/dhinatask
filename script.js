@@ -645,98 +645,99 @@ renderDashboard();        // refresh Dashboard
     
 
     function openEditModal(taskNo) {
+    const task = allTasks.find(t => t.TaskNo === taskNo);
+    if (!task) return;
 
-        const task = allTasks.find(t => t.TaskNo === taskNo);
+    const modal = document.getElementById('edit-task-modal');
+    const form = document.getElementById('edit-task-form');
+    if (!form || !modal) return;
 
-        if (!task) return;
+    // Fill form fields
+    form.elements.OriginalTaskNo.value = task.TaskNo || '';
+    // If you store TaskNo as readonly primary id keep it in TaskNo too
+    form.elements.TaskNo.value = task.TaskNo || '';
+    form.elements.Project.value = task.Project || '';
+    form.elements.TaskName.value = task.TaskName || '';
+    form.elements.StartDate.value = task.StartDate || '';
+    form.elements.EndDate.value = task.EndDate || '';
+    form.elements.Priority.value = task.Priority || '';
+    form.elements.TaskStatus.value = task.TaskStatus || '';
+    form.elements.Notes.value = task.Notes || '';
+    // numeric fields
+    if (form.elements.ETA) form.elements.ETA.value = task.ETA || '';
+    if (form.elements.TodayHours) form.elements.TodayHours.value = task.TodayHours || '';
+    if (form.elements.Team) form.elements.Team.value = task.Team || '';
 
-        const modal = document.getElementById('edit-task-modal');
+    // Populate TaskOwner select from current team members, then set value
+    const ownerSelect = form.elements.TaskOwner;
+    if (ownerSelect) {
+        ownerSelect.innerHTML = '<option value="">Select Owner</option>' +
+            (allTeamMembers || []).map(m => `<option value="${m.FullName}">${m.FullName}</option>`).join('');
+        ownerSelect.value = task.TaskOwner || '';
+    }
 
-        const form = document.getElementById('edit-task-form');
+    // If Project dropdown exists and you want consistent values
+    const projectSelect = form.elements.Project;
+    if (projectSelect) {
+        // only replace options if it is a select (not text input)
+        if (projectSelect.tagName && projectSelect.tagName.toLowerCase() === 'select') {
+            projectSelect.innerHTML = '<option value="">Select Project</option>' +
+                (allProjects || []).map(p => `<option value="${p.ProjectName || p.Project || p['Project Name'] || ''}">${p.ProjectName || p.Project || p['Project Name'] || ''}</option>`).join('');
+            projectSelect.value = task.Project || '';
+        }
+    }
 
-        form.elements.OriginalTaskNo.value = task.TaskNo;
+    // Show the modal
+    modal.style.display = 'flex';
+}
 
-        form.elements.TaskNo.value = task.TaskNo;
-
-        form.elements.Project.value = task.Project || '';
-
-        form.elements.TaskName.value = task.TaskName || '';
-
-        form.elements.StartDate.value = task.StartDate || '';
-
-        form.elements.EndDate.value = task.EndDate || '';
-
-        form.elements.Priority.value = task.Priority || '';
-
-        form.elements.TaskOwner.value = task.TaskOwner || '';
-
-        form.elements.TaskStatus.value = task.TaskStatus || '';
-
-        form.elements.Notes.value = task.Notes || '';
-
-        const ownerSelect = form.elements.TaskOwner;
-
-ownerSelect.innerHTML = '<option value="">Select Owner</option>' + 
-
-    allTeamMembers.map(m => `<option value="${m.FullName}">${m.FullName}</option>`).join('');
-
-ownerSelect.value = task.TaskOwner || '';
-
-
-
-    }
 
 
 
     async function handleEditFormSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = Object.fromEntries(new FormData(form).entries());
 
-        e.preventDefault();
+    // Ensure identifier exists — use OriginalTaskNo if TaskNo might have been changed
+    // We want the server to find the row by its original TaskNo
+    if (formData.OriginalTaskNo && !formData.TaskNo) {
+        formData.TaskNo = formData.OriginalTaskNo;
+    }
 
-        const form = e.target;
+    // If your Apps Script identifier column is named differently, ensure the form includes that key.
+    // (Common case: identifier column is 'TaskNo' as in this codebase.)
 
-        const formData = Object.fromEntries(new FormData(form).entries());
+    // Call backend to update sheet
+    try {
+        setButtonLoading(form.querySelector('button[type="submit"]') || { dataset: { originalText: 'Save' } }, true);
 
-        const idx = allTasks.findIndex(t => t.TaskNo === formData.OriginalTaskNo);
+        const res = await updateSheetData('UPDATE', 'Tasks', formData);
+        // updateSheetData uses no-cors so response may be opaque. We optimistically proceed.
 
-if (idx !== -1) allTasks[idx] = formData;  // update local state
+        // Update local state (replace the task in allTasks)
+        const idx = allTasks.findIndex(t => t.TaskNo === formData.OriginalTaskNo || t.TaskNo === formData.TaskNo);
+        if (idx !== -1) {
+            // Merge changes so fields not present in form remain (optional)
+            allTasks[idx] = { ...allTasks[idx], ...formData };
+        } else {
+            // If not found, push as fallback
+            allTasks.push(formData);
+        }
 
-renderKanban(allTasks);
+        // Close modal and refresh UI
+        form.closest('.fixed').style.display = 'none';
+        showToast('Task updated. Refreshing...', 'success');
 
-renderTable(allTasks);
-
-renderDashboard();
-
-
-
-    }
-
-    
-
-    function confirmDeleteTask(taskNo) {
-
-        const modal = document.getElementById('delete-confirm-modal');
-
-        modal.style.display = 'flex';
-
-        const confirmBtn = document.getElementById('confirm-delete-btn');
-
-        const newConfirmBtn = confirmBtn.cloneNode(true);
-
-        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-
-        newConfirmBtn.addEventListener('click', async () => {
-
-            await updateSheetData('DELETE', 'Tasks', { TaskNo: taskNo });
-
-            modal.style.display = 'none';
-
-            showToast('Task deleted successfully. Refreshing...', 'info');
-
-            setTimeout(loadAllData, 500); // Give sheet a moment to update
-
-        });
-
-    }
+        // Refresh data from sheet to ensure canonical state (recommended)
+        setTimeout(loadAllData, 500);
+    } catch (error) {
+        console.error('Error updating task:', error);
+        showToast('Failed to update task. See console for details.', 'error');
+    } finally {
+        setButtonLoading(form.querySelector('button[type="submit"]') || { dataset: { originalText: 'Save' } }, false);
+    }
+}
 
 
 
