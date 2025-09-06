@@ -261,13 +261,19 @@
             </div>
             <form id="add-task-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input type="text" name="TaskNo" placeholder="Task No" class="p-2 border rounded-lg" required>
-                <input type="text" name="Project" placeholder="Project" class="p-2 border rounded-lg" required>
+                <select name="Project" id="add-task-project" class="p-2 border rounded-lg" required>
+  <option value="">Select Project</option>
+</select>
+
                 <select name="TaskType" class="p-2 border rounded-lg"><option>DM Team</option><option>Tech Team</option><option>Design Team</option></select>
                 <input type="text" id="new-task-name" name="TaskName" placeholder="Task Name" class="md:col-span-2 p-2 border rounded-lg" required>
                 <div><label class="text-sm">Start Date</label><input type="date" name="StartDate" class="w-full p-2 border rounded-lg"></div>
                 <div><label class="text-sm">End Date</label><input type="date" name="EndDate" class="w-full p-2 border rounded-lg"></div>
                 <select name="Priority" class="p-2 border rounded-lg"><option>Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
-                <select name="TaskOwner" class="p-2 border rounded-lg"><option>Task Owner</option></select>
+                <select name="TaskOwner" id="add-task-owner" class="p-2 border rounded-lg">
+  <option value="">Select Owner</option>
+</select>
+
                 <select name="TaskStatus" class="p-2 border rounded-lg"><option>To Do</option><option>In Progress</option><option>Review</option><option>Done</option></select>
                 <input type="text" name="Team" placeholder="Team" class="p-2 border rounded-lg">
                 <input type="number" name="ETA" placeholder="ETA (Minutes)" class="p-2 border rounded-lg">
@@ -298,13 +304,18 @@
             <form id="edit-task-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input type="hidden" name="OriginalTaskNo">
                 <input type="text" name="TaskNo" placeholder="Task No" class="p-2 border rounded-lg bg-gray-100" readonly>
-                <input type="text" name="Project" placeholder="Project" class="p-2 border rounded-lg" required>
+                <select name="Project" id="add-task-project" class="p-2 border rounded-lg" required>
+  <option value="">Select Project</option>
+</select>
                 <select name="TaskType" class="p-2 border rounded-lg"><option>Task Type</option></select>
                 <input type="text" name="TaskName" placeholder="Task Name" class="md:col-span-2 p-2 border rounded-lg" required>
                 <div><label class="text-sm">Start Date</label><input type="date" name="StartDate" class="w-full p-2 border rounded-lg"></div>
                 <div><label class="text-sm">End Date</label><input type="date" name="EndDate" class="w-full p-2 border rounded-lg"></div>
                 <select name="Priority" class="p-2 border rounded-lg"><option>Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
-                <select name="TaskOwner" class="p-2 border rounded-lg"><option>Task Owner</option></select>
+               <select name="TaskOwner" id="add-task-owner" class="p-2 border rounded-lg">
+  <option value="">Select Owner</option>
+</select>
+
                 <select name="TaskStatus" class="p-2 border rounded-lg"><option>To Do</option><option>In Progress</option><option>Review</option><option>Done</option></select>
                 <input type="text" name="Team" placeholder="Team" class="p-2 border rounded-lg">
                 <input type="number" name="ETA" placeholder="ETA (Minutes)" class="p-2 border rounded-lg">
@@ -349,4 +360,3 @@
 </body>
 
 </html>
-
