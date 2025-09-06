@@ -48,8 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 method: 'POST',
 
-                mode: 'no-cors', // Important for Apps Script POST from browser
-
                 headers: { 'Content-Type': 'application/json' },
 
                 body: JSON.stringify({ action, sheetName, data })
@@ -1176,3 +1174,4 @@ populateAddTaskDropdowns();
 
 
 });
+
