@@ -287,7 +287,7 @@ renderDashboard();        // refresh Dashboard
             const priorityColors = { High: 'bg-red-100 text-red-700', Medium: 'bg-yellow-100 text-yellow-700', Low: 'bg-green-100 text-green-700' };
             const row = document.createElement('tr');
             row.className = 'border-b hover:bg-gray-50';
-            row.innerHTML = `<td class="p-3">${task.TaskNo}</td><td class="p-3 font-semibold">${task.TaskName}</td><td class="p-3">${task.Project}</td><td class="p-3"><span class="px-2 py-1 text-xs ${priorityColors[task.Priority] || 'bg-gray-100'} rounded-full">${task.Priority}</span></td><td class="p-3">${task.TaskStatus}</td><td class="p-3">${task.EndDate}</td><td class="p-3">${task.TaskOwner}</td><td class="p-3 flex items-center space-x-2"><button class="p-1 text-gray-500 hover:text-blue-600 edit-task-btn" data-task-no="${task.TaskNo}"><i data-feather="edit-2" class="w-4 h-4"></i></button><button class="p-1 text-gray-500 hover:text-red-600 delete-task-btn" data-task-no="${task.TaskNo}"><i data-feather="trash-2" class="w-4 h-4"></i></button></td>`;
+            row.innerHTML = `<td class="p-3">${task.TaskNo}</td><td class="p-3 font-semibold">${task.TaskName}</td><td class="p-3">${task.Project}</td><td class="p-3"><span class="px-2 py-1 text-xs ${priorityColors[task.Priority] || 'bg-gray-100'} rounded-full">${task.Priority}</span></td><td class="p-3">${task.TaskStatus}</td><td class="p-3">${task.EndDate}</td><td class="p-3">${task.TaskType || ''}</td><td class="p-3">${task.TaskOwner}</td><td class="p-3 flex items-center space-x-2"><button class="p-1 text-gray-500 hover:text-blue-600 edit-task-btn" data-task-no="${task.TaskNo}"><i data-feather="edit-2" class="w-4 h-4"></i></button><button class="p-1 text-gray-500 hover:text-red-600 delete-task-btn" data-task-no="${task.TaskNo}"><i data-feather="trash-2" class="w-4 h-4"></i></button></td>`;
             tableBody.appendChild(row);
         });
         feather.replace();
@@ -327,6 +327,7 @@ renderDashboard();        // refresh Dashboard
         form.elements.Priority.value = task.Priority || '';
         form.elements.TaskOwner.value = task.TaskOwner || '';
         form.elements.TaskStatus.value = task.TaskStatus || '';
+        form.elements.TaskType.value = task.TaskType || '';
         form.elements.Notes.value = task.Notes || '';
         const ownerSelect = form.elements.TaskOwner;
 ownerSelect.innerHTML = '<option value="">Select Owner</option>' + 
@@ -589,6 +590,7 @@ ownerSelect.value = task.TaskOwner || '';
     });
 
 });
+
 
 
 
